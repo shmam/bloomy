@@ -1,0 +1,23 @@
+"""
+    Bloom Filter pseudocode
+"""
+create (m)
+    return bit array of m bits
+end
+    
+    
+add (bits, value)
+    foreach hashFunction hf
+        setbit = 1 << hf (value)
+        bits |= setbit
+end
+
+search (bits, value)
+    foreach hashfunction hf
+        checkbit = 1 << hf(value)
+        if checkbit & bits = 0 then
+            return false
+            
+    return true
+end
+
