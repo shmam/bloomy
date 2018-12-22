@@ -6,6 +6,7 @@ _**Noun**_
 2. A fun side project!
 
 [![Build Status](https://travis-ci.com/shmam/bloom-filter.svg?branch=master)](https://travis-ci.com/shmam/bloom-filter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ### :cherry_blossom: :bouquet: :tulip: :hibiscus: :blossom: :maple_leaf: :evergreen_tree: :sunflower: :cactus: :fallen_leaf: :deciduous_tree:
 
