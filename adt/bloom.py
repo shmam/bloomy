@@ -1,4 +1,5 @@
 import hashlib
+import math
 
 class bloomFilter:
     
@@ -20,9 +21,10 @@ class bloomFilter:
     """
     def __init__(self, size = 1000000, hashFunctions=None):
         self.bits = 0  
-        self.size = size
+        self.m = size
+        self.n = 0
         if hashFunctions is None:
-            self.k = 10
+            
             self.hashFunctions = []
             """Adding the 10 default hash functions"""
             self.hashFunctions.append(self.hash1)
@@ -35,10 +37,12 @@ class bloomFilter:
             self.hashFunctions.append(self.hash8)
             self.hashFunctions.append(self.hash9)
             self.hashFunctions.append(self.hash10)
+            self.k = len(self.hashFunctions)
 
         else:
-            self.k = len(hashFunctions)
             self.hashFunctions = hashFunctions
+            self.k = len(self.hashFunctions)
+
     
     """
     Adding a value to the set in the bloom filter
@@ -48,8 +52,9 @@ class bloomFilter:
     def add(self, value):
         """Insert value into the bloom filter."""
         for hashf in self.hashFunctions: 
-            idx = hashf(value, self.size) 
+            idx = hashf(value, self.m) 
             self.bits |= 1 << idx
+        self.n += 1
     
     """
     Adding a parameterized function to the list of hash functions
@@ -59,6 +64,7 @@ class bloomFilter:
     def addHashFunction(self, function): 
         if(callable(function)): 
             self.hashFunctions.append(funciton)
+            self.k = len(self.hashFunctions)
 
     """
     Creates a bit mask with the given integer array in those positions  
@@ -77,7 +83,7 @@ class bloomFilter:
     @return: list of hash values generated for the given value
     """
     def fingerprint(self, value):
-        return [hf(value, self.size) for hf in self.hashFunctions]
+        return [hf(value, self.m) for hf in self.hashFunctions]
        
     """
     Determine whether value is present. A false positive might be returned even if the 
@@ -90,7 +96,7 @@ class bloomFilter:
 
         mask = 0
         for hashf in self.hashFunctions:
-            idx = hashf(value,self.size) 
+            idx = hashf(value,self.m) 
             mask |= 1 << idx
         
         if mask & self.bits == mask: 
@@ -98,6 +104,43 @@ class bloomFilter:
             return True
 
         return False
+        
+    """
+    Implementation of the golden ratio compression method 
+    Hash value depends on all characters and their positions, therfore permutations not likely to collide
+    If key space is strings of a certain length, the method distributes keys uniformly across hash table
+    """
+    def gr_compression(self, hash): 
+        phi = (1.0 + math.sqrt(5)) / 2
+        inv_phi = 1.0 / phi
+        return math.floor(self.m * (hash*inv_phi - math.floor(hash*inv_phi)))            
+    
+    """
+    Determine the optimal number of hash functions necessary given m and n 
+    """
+    def calculate_k(self, m = None, n = None):
+        if m == None: m = self.m
+        if n == None: n = self.n
+        
+        try: 
+            return round(m / n  * math.log(2))
+        except ZeroDivisionError: 
+            return 0
+    
+    
+    """
+    Calculating the probability of false positives given m, n and k
+    """
+    def calculate_p(self, k = None, m = None, n = None):
+        if k == None: k = self.k 
+        if m == None: m = self.m
+        if n == None: n = self.n 
+        
+        try: 
+            return pow(1 - math.exp( -k / (m / n)), k)
+        except ZeroDivisionError: 
+            return 0
+        
     
     def hash1(self, value, size):
         """ generates the first 4 bytes of an md5 hash """ 
@@ -149,5 +192,3 @@ class bloomFilter:
         hashobj = hashlib.sha1(bytes(value, encoding='utf-8'))
         return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
     
-
-
