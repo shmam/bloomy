@@ -10,17 +10,13 @@ Unit test class to measure the rate of collisions in the default parameters of t
 """
 class MeasureCollision(unittest.TestCase):
 	
-	
-	
 	"""
 	Measuring preemptive false positves on  a m = 1,000,000, 
 	k = 10 filter against 58,000 uniqie strings 
 	"""
 	def test_dictionary_collision(self):
-		collision_threshold = 5 # This is a pretty standard one I guess. 
 		
 		b = bloomFilter()
-		
 		collision_count = 0; 
 		f = open('./test.data/dict.txt', 'r') 
 		for line in f:
@@ -29,6 +25,10 @@ class MeasureCollision(unittest.TestCase):
 			b.add(line) 
 			if b.__contains__(line) == False: collision_count += 1
 		f.close()
+		
+		collision_threshold = math.floor(b.calculate_p() * b.n)
+		print("COLLISION_THRESHOLD: " + str(collision_threshold))
+
 		self.assertLess(collision_count,collision_threshold, 'collision count has reached beyond the threshold')
 		
 """
@@ -41,7 +41,7 @@ class bloomFilterTest(unittest.TestCase):
 		b = bloomFilter()
 		self.assertNotEqual(None, b, 'bloom filter is none')
 		self.assertEqual(0, b.bits, 'bit array is not null')
-		self.assertEqual(1000000, b.size, "size is not 1000")
+		self.assertEqual(1000000, b.m, "size is not 1000")
 		self.assertEqual(10, b.k)	
 		for f in b.hashFunctions: 
 			self.assertTrue(callable(f), "b.hashFunction cont. non function ")	
@@ -51,7 +51,7 @@ class bloomFilterTest(unittest.TestCase):
 		self.assertNotEqual(None, b, 'bloom filter is none')
 		self.assertEqual(0, b.bits, 'bit array is not null')
 		self.assertEqual(1, b.k)
-		self.assertEqual(100, b.size, "size is not 1000")
+		self.assertEqual(100, b.m, "size is not 1000")
 		for f in b.hashFunctions: 
 			self.assertTrue(callable(f), "b.hashFunction cont. non function ")
 		b.add("j")
