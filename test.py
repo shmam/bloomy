@@ -10,8 +10,6 @@ Unit test class to measure the rate of collisions in the default parameters of t
 """
 class MeasureCollision(unittest.TestCase):
 	
-	
-	
 	"""
 	Measuring preemptive false positves on  a m = 1,000,000, 
 	k = 10 filter against 58,000 uniqie strings 
@@ -19,7 +17,6 @@ class MeasureCollision(unittest.TestCase):
 	def test_dictionary_collision(self):
 		
 		b = bloomFilter()
-		
 		collision_count = 0; 
 		f = open('./test.data/dict.txt', 'r') 
 		for line in f:
@@ -30,7 +27,6 @@ class MeasureCollision(unittest.TestCase):
 		f.close()
 		
 		collision_threshold = math.floor(b.calculate_p() * b.n)
-		
 		print("COLLISION_THRESHOLD: " + str(collision_threshold))
 
 		self.assertLess(collision_count,collision_threshold, 'collision count has reached beyond the threshold')
