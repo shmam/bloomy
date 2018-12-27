@@ -18,8 +18,10 @@ class MeasureCollision(unittest.TestCase):
 		
 		b = bloomFilter()
 		collision_count = 0; 
+		line_count = 0
 		f = open('./test.data/dict.txt', 'r') 
 		for line in f:
+			line_count += 1
 			line = line.rstrip()
 			if b.__contains__(line) == True: collision_count += 1 
 			b.add(line) 
@@ -27,7 +29,8 @@ class MeasureCollision(unittest.TestCase):
 		f.close()
 		
 		collision_threshold = math.floor(b.calculate_p() * b.n)
-		print("COLLISION_THRESHOLD: " + str(collision_threshold))
+		print("COLLISION_THRESHOLD: " + str(collision_threshold) + " in " + str(line_count))
+		print("COLLISION_COUNT: " + str(collision_count) + " in " + str(line_count))
 
 		self.assertLess(collision_count,collision_threshold, 'collision count has reached beyond the threshold')
 		
@@ -47,7 +50,7 @@ class bloomFilterTest(unittest.TestCase):
 			self.assertTrue(callable(f), "b.hashFunction cont. non function ")	
 			
 	def test_bloom_init_param(self): 
-		b = bloomFilter(100,[lambda e,size: hash(e) % size])
+		b = bloomFilter(100,[lambda e: hash(e) % 100])
 		self.assertNotEqual(None, b, 'bloom filter is none')
 		self.assertEqual(0, b.bits, 'bit array is not null')
 		self.assertEqual(1, b.k)

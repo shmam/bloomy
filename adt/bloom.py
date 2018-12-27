@@ -28,16 +28,8 @@ class bloomFilter:
             
             self.hashFunctions = []
             """Adding the 10 default hash functions"""
-            self.hashFunctions.append(self.hash1)
-            self.hashFunctions.append(self.hash2)
-            self.hashFunctions.append(self.hash3)
-            self.hashFunctions.append(self.hash4)
-            self.hashFunctions.append(self.hash5)
-            self.hashFunctions.append(self.hash6)
-            self.hashFunctions.append(self.hash7)
-            self.hashFunctions.append(self.hash8)
-            self.hashFunctions.append(self.hash9)
-            self.hashFunctions.append(self.hash10)
+            for i in range(0,10): 
+                self.hashFunctions.append(self.kHash(i))
             self.k = len(self.hashFunctions)
 
         else:
@@ -53,7 +45,7 @@ class bloomFilter:
     def add(self, value):
         """Insert value into the bloom filter."""
         for hashf in self.hashFunctions: 
-            idx = hashf(value, self.m) 
+            idx = hashf(value) 
             self.bits |= 1 << idx
         self.n += 1
     
@@ -84,7 +76,7 @@ class bloomFilter:
     @return: list of hash values generated for the given value
     """
     def fingerprint(self, value):
-        return [hf(value, self.m) for hf in self.hashFunctions]
+        return [hf(value) for hf in self.hashFunctions]
        
     """
     Determine whether value is present. A false positive might be returned even if the 
@@ -97,7 +89,7 @@ class bloomFilter:
 
         mask = 0
         for hashf in self.hashFunctions:
-            idx = hashf(value,self.m) 
+            idx = hashf(value) 
             mask |= 1 << idx
         
         if mask & self.bits == mask: 
@@ -142,60 +134,6 @@ class bloomFilter:
         except ZeroDivisionError: 
             return 0
         
-    def kHash(self,value): 
-        adj = (bytes(value, 'ascii') + bytes(1))
-        hashobj = hashlib.md5(adj)
-        h = int(hashobj.hexdigest()[0:8],16)
-        print(self.gr_compression(h))
+    def kHash(self,n): 
+        return lambda value: (self.gr_compression(int(hashlib.md5(bytes(value, 'ascii') + bytes(n)).hexdigest()[0:8],16)))
         
-    
-    
-    def hash1(self, value, size):
-        """ generates the first 4 bytes of an md5 hash """ 
-        hashobj = hashlib.md5(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[0:8]),0) % size
-        
-    def hash2(self, value, size): 
-        """ generates the first 4 bytes of an sha256 hash """
-        hashobj = hashlib.sha256(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[0:8]),0) % size
-        
-    def hash3(self, value, size): 
-        """ generates the first 4 bytes of an sha384 hash """
-        hashobj = hashlib.sha384(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[0:8]),0) % size
-
-    def hash4(self, value, size):
-        """ generates the first 4 bytes of an sha224 hash """
-        hashobj = hashlib.sha224(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[0:8]),0) % size
-        
-    def hash5(self, value, size):
-        """ generates the first 4 bytes of an sha1 hash """ 
-        hashobj = hashlib.sha1(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[0:8]),0) % size
-    
-    def hash6(self, value, size):
-        """ generates the first 4 bytes of an md5 hash """ 
-        hashobj = hashlib.md5(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
-        
-    def hash7(self, value, size): 
-        """ generates the first 4 bytes of an sha256 hash """
-        hashobj = hashlib.sha256(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
-        
-    def hash8(self, value, size): 
-        """ generates the first 4 bytes of an sha384 hash """
-        hashobj = hashlib.sha384(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
-
-    def hash9(self, value, size):
-        """ generates the first 4 bytes of an sha224 hash """
-        hashobj = hashlib.sha224(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
-        
-    def hash10(self, value, size):
-        """ generates the first 4 bytes of an sha1 hash """ 
-        hashobj = hashlib.sha1(bytes(value, encoding='utf-8'))
-        return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
