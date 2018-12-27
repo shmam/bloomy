@@ -1,6 +1,7 @@
 import hashlib
 import math
 
+
 class bloomFilter:
     
     """
@@ -141,6 +142,13 @@ class bloomFilter:
         except ZeroDivisionError: 
             return 0
         
+    def kHash(self,value): 
+        adj = (bytes(value, 'ascii') + bytes(1))
+        hashobj = hashlib.md5(adj)
+        h = int(hashobj.hexdigest()[0:8],16)
+        print(self.gr_compression(h))
+        
+    
     
     def hash1(self, value, size):
         """ generates the first 4 bytes of an md5 hash """ 
@@ -192,3 +200,6 @@ class bloomFilter:
         hashobj = hashlib.sha1(bytes(value, encoding='utf-8'))
         return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
     
+    
+b = bloomFilter()
+b.kHash("Sam crochet")
