@@ -199,7 +199,3 @@ class bloomFilter:
         """ generates the first 4 bytes of an sha1 hash """ 
         hashobj = hashlib.sha1(bytes(value, encoding='utf-8'))
         return int("0x" + (hashobj.hexdigest()[8:16]),0) % size
-    
-    
-b = bloomFilter()
-b.kHash("Sam crochet")
