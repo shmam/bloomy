@@ -5,9 +5,10 @@ _**Noun**_
 1. Space-efficient probabilistic data structure that is used to test whether an element is a member of a set. 
 2. A fun side project!
 
-[![Build Status](https://travis-ci.com/shmam/bloom-filter.svg?branch=master)](https://travis-ci.com/shmam/bloom-filter)
+[![Build Status](https://travis-ci.com/shmam/bloomy.svg?branch=master)](https://travis-ci.com/shmam/bloomy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Coverage Status](https://coveralls.io/repos/github/shmam/bloom-filter/badge.svg?branch=master)](https://coveralls.io/github/shmam/bloom-filter?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/shmam/bloomy/badge.svg?branch=master)](https://coveralls.io/github/shmam/bloomy?branch=master)
+[![PyPI version](https://badge.fury.io/py/bloomy.svg)](https://badge.fury.io/py/bloomy)
 
 ### :cherry_blossom: :bouquet: :tulip: :hibiscus: :blossom: :maple_leaf: :evergreen_tree: :sunflower: :cactus: :fallen_leaf: :deciduous_tree:
 
