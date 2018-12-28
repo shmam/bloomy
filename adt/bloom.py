@@ -56,7 +56,7 @@ class bloomFilter:
     """
     def addHashFunction(self, function): 
         if(callable(function)): 
-            self.hashFunctions.append(funciton)
+            self.hashFunctions.append(function)
             self.k = len(self.hashFunctions)
 
     """

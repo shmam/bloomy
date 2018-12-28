@@ -55,6 +55,8 @@ class bloomFilterTest(unittest.TestCase):
 		self.assertEqual(0, b.bits, 'bit array is not null')
 		self.assertEqual(1, b.k)
 		self.assertEqual(100, b.m, "size is not 1000")
+		b.addHashFunction(lambda e: (hash(e) % 50) + 2)
+		self.assertEqual(2, b.k)
 		for f in b.hashFunctions: 
 			self.assertTrue(callable(f), "b.hashFunction cont. non function ")
 		b.add("j")
@@ -89,10 +91,26 @@ class bloomFilterTest(unittest.TestCase):
 		self.assertTrue(b2.__contains__("abcdefghijklmnopqrstuvwxyz"))
 
 
+	def test_bloom_calculate_p(self): 
+		b = bloomFilter()
+		self.assertEqual(b.calculate_p(), 0)
+		self.assertEqual(round(b.calculate_p(5,1000,100),9), 0.009430929)
+		self.assertEqual(round(b.calculate_p(10,50000,50000),9), 0.999546093)
+		self.assertEqual(round(b.calculate_p(200,1000000000,100),9), 0)
+		self.assertEqual(round(b.calculate_p(2,1000000000,500000000),9), 0.399576401)
 
-
-
-	
+	def test_bloom_calculate_k(self): 
+		b = bloomFilter()
+		self.assertEqual(b.calculate_p(), 0)
+		self.assertEqual(b.calculate_k(1000000000,500000000),1)
+		self.assertEqual(b.calculate_k(1000000000,30000),23105)
+		self.assertEqual(b.calculate_k(1000000000,400000),1733)
+		
+	def test_bloom_mask(self): 
+		b = bloomFilter()
+		self.assertEqual(b.mask([0,1,2,3]), 15)
+		self.assertEqual(b.mask([4]), 16)
+		self.assertEqual(b.mask([8]), 256)
 	
 if __name__ == '__main__':
 	unittest.main()
