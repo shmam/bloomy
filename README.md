@@ -7,7 +7,7 @@ _**Noun**_
 
 [![Build Status](https://travis-ci.com/shmam/bloom-filter.svg?branch=master)](https://travis-ci.com/shmam/bloom-filter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Coverage Status](https://coveralls.io/repos/github/shmam/bloom-filter/badge.svg?branch=dev)](https://coveralls.io/github/shmam/bloom-filter?branch=dev)
+[![Coverage Status](https://coveralls.io/repos/github/shmam/bloom-filter/badge.svg?branch=master)](https://coveralls.io/github/shmam/bloom-filter?branch=master)
 
 ### :cherry_blossom: :bouquet: :tulip: :hibiscus: :blossom: :maple_leaf: :evergreen_tree: :sunflower: :cactus: :fallen_leaf: :deciduous_tree:
 
