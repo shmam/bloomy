@@ -1,7 +1,7 @@
 import os
 import sys
 import random
-from adt.bloom import * 
+from bloomy.bloom import * 
 import unittest
 
 
