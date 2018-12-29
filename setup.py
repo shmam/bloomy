@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("PYPI.md", "r") as fh:
 	long_description = fh.read()
 
 setuptools.setup(
 	name="bloomy",
-	version="0.0.1",
+	version="0.0.2",
 	author="Sam Crochet",
 	author_email="samuel.d.crochet@gmail.com",
 	description="An efficient and scalable bloom filter module built in pure python.",

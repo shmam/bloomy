@@ -7,7 +7,7 @@ class bloomFilter:
     """
     Constructs a new bloom filter with the specified (or default) parameters. 
     
-    Default values are set for a 1,000,000 bit array 122.07KiB with k = 10 hash functions, set to 
+    Default values are set for a 1,000,000 bit array (122.07KiB) with k = 10 hash functions, set to 
     hold up 50,000 items with a reasonable odds against false positives(1 in 11243)
     
     Calculated with https://hur.st/bloomfilter/
@@ -35,6 +35,25 @@ class bloomFilter:
         else:
             self.hashFunctions = hashFunctions
             self.k = len(self.hashFunctions)
+
+    """
+    Scales up M, and calculates an appropriate k, and fresh has functions for the size 
+    @param: new m 
+    @return: None
+    """
+    def scale_up(self, new_m = None):
+        if new_m == None: new_m = self.m * 1.5
+        
+        if new_m < self.m: 
+            raise ValueError('m cannot be smaller, this is only a scale up!')
+        
+        self.m = new_m
+        new_k = self.calculate_k()
+        self.hashFunctions = []
+        for i in range(0,new_k): 
+            self.hashFunctions.append(self.kHash(i))
+        self.k = len(self.hashFunctions)
+        
 
     
     """
@@ -102,6 +121,8 @@ class bloomFilter:
     Implementation of the golden ratio compression method 
     Hash value depends on all characters and their positions, therfore permutations not likely to collide
     If key space is strings of a certain length, the method distributes keys uniformly across hash table
+    @param:  hash value to compress into the valid keyspace
+    @return: integer between 0 and m-1
     """
     def gr_compression(self, hash): 
         phi = (1.0 + math.sqrt(5)) / 2
@@ -110,6 +131,8 @@ class bloomFilter:
     
     """
     Determine the optimal number of hash functions necessary given m and n 
+    @param: m, n 
+    @return: k (whole number of optimal hash functions) 
     """
     def calculate_k(self, m = None, n = None):
         if m == None: m = self.m
@@ -123,6 +146,8 @@ class bloomFilter:
     
     """
     Calculating the probability of false positives given m, n and k
+    @param:  k, m, n
+    @return: p (rate of false positives)
     """
     def calculate_p(self, k = None, m = None, n = None):
         if k == None: k = self.k 
@@ -133,7 +158,12 @@ class bloomFilter:
             return pow(1 - math.exp( -k / (m / n)), k)
         except ZeroDivisionError: 
             return 0
-        
+    
+    """
+    Generaes a unique hash function based on md5 hashing and left shifting. 
+    @param:  i number of bytes to shift left per value 
+    @return: lambda function f(value) -> hashed value with gr compression
+    """    
     def kHash(self,n): 
         return lambda value: (self.gr_compression(int(hashlib.md5(bytes(value, 'ascii') + bytes(n)).hexdigest()[0:8],16)))
         
