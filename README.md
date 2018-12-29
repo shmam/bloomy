@@ -21,8 +21,22 @@ Bloomy is a bloom filter module designed to be both lightweight and scalable. Bl
 - Implements binary and bit masking operations. This reduces the runtime of add and contains operations to practically O(1). :zap:
 - Raw types can be used. :+1:
 
+### Installation and Usage
+The latest version of bloomy can be installed through pip
+``` shell
+$ pip install bloomy
+````
 
----
+And imported/used as such
+``` python
+from bloomy.bloom import *
+
+b = bloomFilter()
+b.add("Hello World")
+assert b.__contains__("Hello World") is True
+```
+
+
 ### Operations :nut_and_bolt:	
 
 #### `___init__(m,[array of additional hash functions])`
